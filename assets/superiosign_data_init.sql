@@ -1,0 +1,33 @@
+--初始化超级管理员
+  insert into t_users(
+    `id`,
+    `username`,
+    `password`,
+    `pass_sault`,
+    `create_time`,
+    `create_user`,
+    `role_type`,
+    `last_login_ip`,
+    `last_login_time`,
+    `login_fail_count`,
+    `login_fail_time`,
+    `login_fail_ip`,
+    `locked`,
+    `deleted`
+  ) 
+  values(
+    'administrator',
+    'superadmin',
+    'aa123123',
+    '',
+    current_timestamp(),
+    'administrator',
+    1,
+    null,
+    null,
+    0,
+    null,
+    null,
+    0,
+    0
+  );

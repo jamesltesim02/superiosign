@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="space.maganda.superiosign.mapper.UserMapper">
+  <resultMap id="BaseResultMap" type="space.maganda.superiosign.model.User">
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result property="username" column="username" jdbcType="VARCHAR" />
+    <result property="password" column="password" jdbcType="VARCHAR" />
+    <result property="passSalt" column="pass_salt" jdbcType="VARCHAR" />
+    <result property="email" column="email" jdbcType="VARCHAR" />
+    <result property="roleType" column="role_type" jdbcType="INTEGER" />
+    <result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+    <!-- <result property="createUser" column="createUser" jdbcType="" /> -->
+    <result property="lastLoginIp" column="last_login_ip" jdbcType="VARCHAR" />
+    <result property="lastLoginTime" column="last_login_time" jdbcType="TIMESTAMP" />
+    <result property="loginFailCount" column="login_fail_count" jdbcType="INTEGER" />
+    <result property="loginFailTime" column="login_fail_time" jdbcType="TIMESTAMP" />
+    <result property="loginFailIp" column="login_fail_ip" jdbcType="VARCHAR" />
+    <result property="locked" column="locked" jdbcType="INTEGER" />
+    <result property="deleted" column="deleted" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="BaseColumns">
+    id,
+    username,
+    password,
+    pass_sault,
+    create_time,
+    create_user,
+    role_type,
+    last_login_ip,
+    last_login_time,
+    login_fail_count,
+    login_fail_time,
+    login_fail_ip,
+    locked,
+    deleted
+  </sql>
+
+  <!-- 查询所有用户 -->
+  <select
+    id="list"
+    resultMap="BaseResultMap"
+  >
+    select
+    <include refid="BaseColumns" />
+    from t_users
+  </select>
+
+  <!-- 根据id查询用户 -->
+  <select
+    id="getUser"
+    resultMap="BaseResultMap"
+    parameterType="java.lang.String"
+  >
+    select
+    <include refid="BaseColumns" />
+    from t_users
+    where id = #{id, jdbcType=VARCHAR}
+  </select>
+
+  <!-- 根据username查询用户 -->
+  <select
+    id="getUserByUsername"
+    resultMap="BaseResultMap"
+    parameterType="java.lang.String"
+  >
+    select
+    <include refid="BaseColumns" />
+    from t_users
+    where username = #{username, jdbcType=VARCHAR}
+  </select>
+
+  <!-- 修改登录错误次数 -->
+	<update id="updateLoginFailCount">
+    update
+      t_users
+    set
+      login_fail_count = #{user.loginFailCount},
+      login_fail_ip = #{user.loginFailIp},
+      login_fail_time = #{user.loginFailTime}
+    where
+      id = #{user.id}
+	</update>
+
+  <!-- 修改登录成功相关信息 -->
+  <update id="updateLoginDetail">
+    update
+      t_users
+    set
+      last_login_time = #{user.lastLoginTime},
+      last_login_ip = #{user.lastLoginIp},
+      login_fail_count = #{user.loginFailCount},
+      login_fail_ip = #{user.loginFailIp},
+      login_fail_time = #{user.loginFailTime}
+    where
+      id = #{user.id}
+  </update>
+</mapper>
