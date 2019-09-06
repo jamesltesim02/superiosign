@@ -2,7 +2,7 @@ package space.maganda.superiosign.service;
 
 import java.util.List;
 
-import space.maganda.superiosign.model.User;
+import space.maganda.superiosign.xo.po.User;
 
 /**
  * 用户Service

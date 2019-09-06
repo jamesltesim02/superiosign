@@ -5,12 +5,13 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import space.maganda.superiosign.model.User;
+import space.maganda.superiosign.xo.dto.LoginDto;
+import space.maganda.superiosign.xo.po.User;
 import space.maganda.superiosign.service.UserService;
 import space.maganda.superiosign.utils.HttpUtils;
 
@@ -39,14 +40,24 @@ public class UserController {
    */
   @RequestMapping(path = "/login", method = RequestMethod.POST)
   public User login(
-    @RequestParam("username") String username,
-    @RequestParam("password") String password,
+    @RequestBody LoginDto loginDto,
     HttpServletRequest request
   ) {
     return userService.login(
-      username,
-      password,
+      loginDto.getUsername(),
+      loginDto.getPassword(),
       HttpUtils.getClientIp(request)
     );
   }
+  // public User login(
+  //   @RequestParam("username") String username,
+  //   @RequestParam("password") String password,
+  //   HttpServletRequest request
+  // ) {
+  //   return userService.login(
+  //     username,
+  //     password,
+  //     HttpUtils.getClientIp(request)
+  //   );
+  // }
 }

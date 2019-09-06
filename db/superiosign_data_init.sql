@@ -1,4 +1,4 @@
---初始化超级管理员
+-- 初始化超级管理员
   insert into t_users(
     `id`,
     `username`,

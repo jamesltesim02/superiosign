@@ -1,20 +1,24 @@
 package space.maganda.superiosign.service.impl;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.connection.RedisConfiguration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import space.maganda.superiosign.constant.CacheKey;
 import space.maganda.superiosign.constant.ResultStatus;
 import space.maganda.superiosign.constant.UserConstant;
 import space.maganda.superiosign.exception.BusinessException;
+import space.maganda.superiosign.mapper.LoginLogMapper;
 import space.maganda.superiosign.mapper.UserMapper;
-import space.maganda.superiosign.model.User;
+import space.maganda.superiosign.xo.po.LoginLog;
+import space.maganda.superiosign.xo.po.User;
 import space.maganda.superiosign.service.UserService;
+import space.maganda.superiosign.utils.CommonUtils;
 
 /**
  * 用户相关服务实现类
@@ -31,6 +35,24 @@ public class UserServiceImpl implements UserService {
     this.userMapper = userMapper;
   }
 
+  /**
+   * 登录日志mapper
+   */
+  private LoginLogMapper loginLogMapper;
+  @Autowired
+  public void setLoginLogMapper(LoginLogMapper loginLogMapper) {
+    this.loginLogMapper = loginLogMapper;
+  }
+
+  /**
+   * redis操作对象
+   */
+  @Autowired
+  private RedisTemplate<String, Object> template;
+  public void setTemplate(RedisTemplate<String, Object> template) {
+    this.template = template;
+  }
+
   @Override
 	public List<User> list() {
 		return userMapper.list();
@@ -40,7 +62,6 @@ public class UserServiceImpl implements UserService {
    * 记录登录错误次数
    * @param user 用户相关信息
    */
-  // @Transactional
   public void updateLoginFailCount(User user) {
     userMapper.updateLoginFailCount(user);
   }
@@ -49,11 +70,18 @@ public class UserServiceImpl implements UserService {
    * 更新登录成功相关信息
    * @param user 用户相关信息
    */
-  // @Transactional
   public void updateLoginDetail(User user) {
+    // 更新用户表数据
     userMapper.updateLoginDetail(user);
 
-    // TODO 保存登录日志到数据库中
+    // 保存登录日志到数据库中
+    LoginLog loginLog = new LoginLog();
+    loginLog.setId(CommonUtils.uuid());
+    loginLog.setUserId(user.getId());
+    loginLog.setLoginIp(user.getLastLoginIp());
+    loginLog.setLoginTime(user.getLastLoginTime());
+
+    loginLogMapper.save(loginLog);
   }
 
   @Override
@@ -68,10 +96,7 @@ public class UserServiceImpl implements UserService {
     // 最后一次登录失败是否是今天之前,如果是则重置为0
     if (user.getLoginFailTime() != null) {
       // 将错误时间转为LocalDate以用作比较
-      LocalDate failDate = LocalDate.ofInstant(
-        user.getLoginFailTime().toInstant(),
-        ZoneId.systemDefault()
-      );
+      LocalDate failDate = CommonUtils.toLocalDate(user.getLoginFailTime());
       if (failDate.isBefore(LocalDate.now())) {
         user.setLoginFailCount(0);
       }
@@ -112,6 +137,11 @@ public class UserServiceImpl implements UserService {
 
     // 保存登录成功信息到数据库中
     this.updateLoginDetail(user);
+
+    // 保存到缓存中
+    this.template.opsForValue().set(CacheKey.CURRENT_USER, user);;
+
+    System.out.println("aaaaaaaaaa: login success");
 
     return user;
   }

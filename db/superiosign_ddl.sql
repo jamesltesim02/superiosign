@@ -1,23 +1,23 @@
-ALTER TABLE `T_CUSTOMER` DROP FOREIGN KEY `fk_T_CUSTOMER`;
-ALTER TABLE `T_ACCOUNT_CUSTOMER_REF` DROP FOREIGN KEY `fk_customer_account_ref`;
-ALTER TABLE `T_ACCOUNT_CUSTOMER_REF` DROP FOREIGN KEY `fk_account_customer_ref`;
-ALTER TABLE `T_APPLE_ACCOUNT` DROP FOREIGN KEY `fk_T_APPLE_ACCOUNT`;
-ALTER TABLE `T_DOWNLOAD_LOG` DROP FOREIGN KEY `fk_T_DOWNLOAD_LOG`;
-ALTER TABLE `T_LOGIN_LOG` DROP FOREIGN KEY `fk_T_LOGIN_LOG`;
-ALTER TABLE `T_OPERSION_LOG` DROP FOREIGN KEY `fk_T_OPERSION_LOG`;
-ALTER TABLE `T_IPA` DROP FOREIGN KEY `fk_T_IPA`;
-ALTER TABLE `T_DOWNLOAD_LOG` DROP FOREIGN KEY `fk_T_DOWNLOAD_LOG_1`;
+-- ALTER TABLE `T_CUSTOMER` DROP FOREIGN KEY `fk_T_CUSTOMER`;
+-- ALTER TABLE `T_ACCOUNT_CUSTOMER_REF` DROP FOREIGN KEY `fk_customer_account_ref`;
+-- ALTER TABLE `T_ACCOUNT_CUSTOMER_REF` DROP FOREIGN KEY `fk_account_customer_ref`;
+-- ALTER TABLE `T_APPLE_ACCOUNT` DROP FOREIGN KEY `fk_T_APPLE_ACCOUNT`;
+-- ALTER TABLE `T_DOWNLOAD_LOG` DROP FOREIGN KEY `fk_T_DOWNLOAD_LOG`;
+-- ALTER TABLE `T_LOGIN_LOG` DROP FOREIGN KEY `fk_T_LOGIN_LOG`;
+-- ALTER TABLE `T_OPERSION_LOG` DROP FOREIGN KEY `fk_T_OPERSION_LOG`;
+-- ALTER TABLE `T_IPA` DROP FOREIGN KEY `fk_T_IPA`;
+-- ALTER TABLE `T_DOWNLOAD_LOG` DROP FOREIGN KEY `fk_T_DOWNLOAD_LOG_1`;
 
-DROP INDEX `username_unique` ON `T_USERS`;
+-- DROP INDEX `username_unique` ON `T_USERS`;
 
-DROP TABLE `T_USERS`;
-DROP TABLE `T_CUSTOMER`;
-DROP TABLE `T_DOWNLOAD_LOG`;
-DROP TABLE `T_APPLE_ACCOUNT`;
-DROP TABLE `T_ACCOUNT_CUSTOMER_REF`;
-DROP TABLE `T_LOGIN_LOG`;
-DROP TABLE `T_OPERSION_LOG`;
-DROP TABLE `T_IPA`;
+-- DROP TABLE `T_USERS`;
+-- DROP TABLE `T_CUSTOMER`;
+-- DROP TABLE `T_DOWNLOAD_LOG`;
+-- DROP TABLE `T_APPLE_ACCOUNT`;
+-- DROP TABLE `T_ACCOUNT_CUSTOMER_REF`;
+-- DROP TABLE `T_LOGIN_LOG`;
+-- DROP TABLE `T_OPERSION_LOG`;
+-- DROP TABLE `T_IPA`;
 
 CREATE TABLE `T_USERS` (
 `id` varchar(32) NOT NULL COMMENT '主键 uuid',
@@ -32,8 +32,8 @@ CREATE TABLE `T_USERS` (
 `login_fail_count` int(8) NULL DEFAULT 0 COMMENT '连续登录失败次数',
 `login_fail_time` datetime NULL COMMENT '登录失败时间',
 `login_fail_ip` varchar(20) NULL COMMENT '登录失败ip',
-`locked` int(4) NULL DEFAULT 0 COMMENT '是否已锁定 0: 否, 1: 是',
-`deleted` int(4) NOT NULL DEFAULT 0 COMMENT '是否删除 0: 否, 1: 是',
+`locked` int(2) NOT NULL DEFAULT 0 COMMENT '是否已锁定 0: 否, 1: 是',
+`deleted` int(2) NOT NULL DEFAULT 0 COMMENT '是否删除 0: 否, 1: 是',
 PRIMARY KEY (`id`) ,
 UNIQUE INDEX `username_unique` (`username` ASC)
 )
@@ -46,6 +46,7 @@ CREATE TABLE `T_CUSTOMER` (
 `name` varchar(255) NULL COMMENT '用户名称',
 `check_api_url` varchar(500) NULL COMMENT '下载校验地址',
 `need_check` int(4) NOT NULL DEFAULT 0 COMMENT '下载前是否需要校验 0 不需要, 1 需要, 默认为 0',
+`deleted` int(2) NOT NULL DEFAULT 0 COMMENT '是否删除 0: 否, 1: 是',
 PRIMARY KEY (`id`) 
 )
 COMMENT = '付费客户信息表';
@@ -81,8 +82,8 @@ CREATE TABLE `T_ACCOUNT_CUSTOMER_REF` (
 `customer_id` varchar(32) NOT NULL COMMENT '客户id',
 `udid` varchar(30) NOT NULL COMMENT '用户设备udid',
 `create_time` datetime NOT NULL COMMENT '创建时间',
-`deleted` int(2) NULL DEFAULT 0 COMMENT '是否已删除',
 `remark` varchar(255) NULL COMMENT '描述',
+`deleted` int(2) NOT NULL DEFAULT 0 COMMENT '是否已删除0: 否, 1: 是',
 PRIMARY KEY (`id`) 
 )
 COMMENT = '客户udid绑定关系表';
@@ -115,6 +116,7 @@ CREATE TABLE `T_IPA` (
 `create_time` datetime NOT NULL COMMENT '创建时间',
 `create_ip` varchar(20) NOT NULL COMMENT '创建ip',
 `create_user` varchar(32) NOT NULL COMMENT '创建用户,当客户上传失败时,管理员可以帮助上传',
+`deleted` int(2) NOT NULL DEFAULT 0 COMMENT '是否删除 0: 否, 1: 是',
 PRIMARY KEY (`id`) 
 )
 COMMENT = '客户ipa信息表';

@@ -1,11 +1,15 @@
-package space.maganda.superiosign.model;
+package space.maganda.superiosign.xo.po;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class User {
-
+/**
+ * 用户模型
+ */
+public class User implements Serializable {
+  private static final long serialVersionUID = -3370165205246521639L;
   /**
    * 主键
    */

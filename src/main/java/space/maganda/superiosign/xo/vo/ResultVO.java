@@ -1,4 +1,4 @@
-package space.maganda.superiosign.vo;
+package space.maganda.superiosign.xo.vo;
 
 import space.maganda.superiosign.constant.ResultStatus;
 
@@ -61,6 +61,7 @@ public class ResultVO {
   }
 
   public ResultVO(Object data) {
+    this(ResultStatus.SUCCESS);
     this.data = data;
   }
 

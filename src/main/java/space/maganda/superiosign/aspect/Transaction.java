@@ -20,7 +20,7 @@ import org.springframework.transaction.interceptor.TransactionInterceptor;
  * 声明式事务切面
  */
 @Configuration
-public class TransactionAspect {
+public class Transaction {
 
   /**
    * 提供配置指定名称规则方法的传播特性以及事务级别的配置对象

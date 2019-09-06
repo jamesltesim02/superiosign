@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="space.maganda.superiosign.mapper.LoginLogMapper">
+  <resultMap id="BaseResultMap" type="space.maganda.superiosign.xo.po.LoginLog">
+    <id property="id" column="id" jdbcType="VARCHAR" />
+    <result property="userId" column="user_id" jdbcType="VARCHAR" />
+    <result property="loginTime" column="login_time" jdbcType="TIMESTAMP" />
+    <result property="loginIp" column="login_ip" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="BaseColumns">
+    id,
+    user_id,
+    login_time,
+    login_ip
+  </sql>
+  <insert id="save">
+    insert into
+    t_login_log (
+      <include refid="BaseColumns" />
+    )
+    values (
+      #{loginLog.id},
+      #{loginLog.userId},
+      #{loginLog.loginTime},
+      #{loginLog.loginIp}
+    )
+  </insert>
+  <select id="list">
+    select
+      <include refid="BaseColumns" />
+    from t_login_log
+  </select>
+  <select id="getLoginLog">
+    select
+      <include refid="BaseColumns" />
+    from t_login_log
+    where
+      id = #{id}
+  </select>
+</mapper>

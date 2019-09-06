@@ -1,11 +1,10 @@
 package space.maganda.superiosign.mapper;
 
-import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import space.maganda.superiosign.model.User;
+import space.maganda.superiosign.xo.po.User;
 
 /**
  * 用户Mapper
